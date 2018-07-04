@@ -4,17 +4,17 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {Game} from './Game';
+import {Container} from '@/component/Container';
 
   window.addEventListener('DOMContentLoaded', () => {
     // Create the game using the 'renderCanvas'.
-    let game = new Game('renderCanvas');
+    let container = new Container('renderCanvas');
   
     // Create the scene.
-    game.createScene();
+    container.createScene();
   
     // Start render loop.
-    game.doRender();
+    container.doRender();
   });
 export default class App extends Vue {}
 </script>
