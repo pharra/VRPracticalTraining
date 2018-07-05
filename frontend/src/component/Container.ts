@@ -40,11 +40,13 @@ class Container {
         meshTask.onSuccess = (task) => {
             console.log('load stone sucess');
             console.log(task.loadedMeshes);
-            task.loadedMeshes[0].position = new BABYLON.Vector3(0, 0, 0.1);
-            const mesh = task.loadedMeshes[0];
-            mesh.actionManager = new BABYLON.ActionManager(this.scene);
-            mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
+            task.loadedMeshes.forEach((mesh) => {
+                mesh.actionManager = new BABYLON.ActionManager(this.scene);
+                mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
                 this.HighlightObj));
+
+            });
+
             // task.loadedMeshes[0].parent = this.freeCamera;
         };
         meshTask.onError = (task, message, exception) => {
