@@ -60,6 +60,8 @@ class Container {
 
         // Create a basic light, aiming 0,1,0 - meaning, to the sky.
         this.light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.scene);
+
+        this.scene.debugLayer.show();
     }
 
     public doRender(): void {
