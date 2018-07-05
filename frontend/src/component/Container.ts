@@ -35,28 +35,25 @@ class Container {
             that.createScene();
             that.doRender();
         };
-        const meshTask = assetsManager.addMeshTask('stone task', 'stone',
-        '/static/objectModel/fps_q3_2/', 'fps_q3_2.babylon');
+        const meshTask = assetsManager.addMeshTask('stone task', '',
+        '/static/objectModel/', 'stone2.obj');
         meshTask.onSuccess = (task) => {
             console.log('load stone sucess');
-            console.log(meshTask.loadedParticleSystems);
-            // task.loadedMeshes[0].position = BABYLON.Vector3.Zero();
+            console.log(task.loadedMeshes);
+            task.loadedMeshes[0].position = new BABYLON.Vector3(0, 0, 0.1);
+            // task.loadedMeshes[0].parent = this.freeCamera;
         };
         meshTask.onError = (task, message, exception) => {
             console.log(message, exception);
-        }
+        };
         assetsManager.load();
         return false;
     }
 
 
     public createScene(): void {
-        // Create a basic BJS Scene object.
-        this.arcRotateCamera = new BABYLON.ArcRotateCamera('camera', 0, 0, 10, BABYLON.Vector3.Zero(), this.scene);
-
-
-        // Attach the camera to the canvas.
-        this.arcRotateCamera.attachControl(this.canvas, false);
+        this.freeCamera = new BABYLON.FreeCamera('FreeCamera', new BABYLON.Vector3(0, 0, 0), this.scene);
+        this.freeCamera.attachControl(this.canvas, true);
 
         // Create a basic light, aiming 0,1,0 - meaning, to the sky.
         this.light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.scene);
