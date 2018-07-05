@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {Container} from '@/component/Container';
+import {Container} from './component/Container';
 
   window.addEventListener('DOMContentLoaded', () => {
     // Create the game using the 'renderCanvas'.
