@@ -1,2 +1,2 @@
 # python cache files
-backend/__pycache__
+*.pyc
