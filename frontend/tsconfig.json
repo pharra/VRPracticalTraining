@@ -13,6 +13,7 @@
     "baseUrl": ".",
     "types": [
       "babylonjs",
+      "babylonjs-loaders",
       "node"    ],
     "paths": {
       "@/*": [
