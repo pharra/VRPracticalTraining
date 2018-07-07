@@ -8,7 +8,7 @@ import {Container} from './component/Container';
 
   window.addEventListener('DOMContentLoaded', () => {
     // Create the game using the 'renderCanvas'.
-    const container = new Container('renderCanvas', '');
+    const container = new Container('renderCanvas', 'static/objectModel/project1/');
   });
 export default class App extends Vue {}
 </script>
