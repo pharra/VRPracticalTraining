@@ -47,10 +47,12 @@ class Container {
                     meshTask.onSuccess = (task) => {
                         DebugLog('load sucess:' + that.url + meshConfig.fileSrc + ':' + meshConfig.fileName);
                         DebugLog(task.loadedMeshes);
+                        DebugLog(task.loadedParticleSystems);
+                        DebugLog(task.loadedSkeletons);
                         task.loadedMeshes.forEach((mesh) => {
-                            mesh.actionManager = new BABYLON.ActionManager(this.scene);
+                            mesh.actionManager = new BABYLON.ActionManager(that.scene);
                             mesh.actionManager.registerAction(
-                                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, this.HighlightObj));
+                                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, that.HighlightObj));
                         });
 
                         // task.loadedMeshes[0].parent = this.freeCamera;
@@ -91,6 +93,7 @@ class Container {
         });
     }
     public HighlightObj(evt: BABYLON.ActionEvent): void {
+        DebugLog('Run preIf function!');
         const m = evt.meshUnderPointer;
         if (m) {
             m.renderOutline = true;
