@@ -1,0 +1,18 @@
+[
+    {
+        "type": "mesh",
+        "fileSrc": "",
+        "fileName": "landspace.babylon",
+        "pName": "",
+        "position": [
+            0,
+            0,
+            0
+        ],
+        "rotation": [
+            0,
+            0,
+            0
+        ]
+    }
+]

@@ -1,6 +1,8 @@
 import * as BABYLON from 'babylonjs';
 import 'babylonjs-loaders';
 import Axios from 'axios';
+import '@/lib/DebugLog';
+import DebugLog from '@/lib/DebugLog';
 
 class Container {
     private canvas: HTMLCanvasElement;
@@ -9,6 +11,12 @@ class Container {
     private freeCamera: BABYLON.FreeCamera | null = null;
     private arcRotateCamera: BABYLON.ArcRotateCamera | null = null;
     private light: BABYLON.Light | null = null;
+
+    /**
+     * create the container using the url of selected project
+     * @param canvasElement canvas id
+     * @param url the url for project, end with /
+     */
     constructor(canvasElement: string, private url: string) {
         // Create canvas and engine.
         this.canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
@@ -18,42 +26,46 @@ class Container {
     }
 
 
-    public preload(): boolean {
-        // Axios.get(this.url + '\\config.json')
-        // .then((response) => {
-        // }).catch((error) => {
-        // });
-
+    public preload() {
         const that: Container = this;
         const assetsManager = new BABYLON.AssetsManager(this.scene);
         assetsManager.onProgress = (remainingCount, totalCount, lastFinishedTask) => {
             that.engine.loadingUIText = 'We are loading the scene. ' +
-            remainingCount + ' out of ' + totalCount + ' items still need to be loaded.';
+                remainingCount + ' out of ' + totalCount + ' items still need to be loaded.';
         };
 
         assetsManager.onFinish = (tasks) => {
             that.createScene();
             that.doRender();
         };
-        const meshTask = assetsManager.addMeshTask('stone task', '',
-        '/static/objectModel/', 'stone2.obj');
-        meshTask.onSuccess = (task) => {
-            console.log('load stone sucess');
-            console.log(task.loadedMeshes);
-            task.loadedMeshes.forEach((mesh) => {
-                mesh.actionManager = new BABYLON.ActionManager(this.scene);
-                mesh.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger,
-                this.HighlightObj));
+        Axios.get(this.url + 'config.json')
+            .then((response) => {
+                DebugLog(response.data);
+                response.data.forEach((meshConfig: any) => {
+                    const meshTask = assetsManager.addMeshTask(meshConfig.fileName, meshConfig.pName,
+                        that.url + meshConfig.fileSrc, meshConfig.fileName);
+                    meshTask.onSuccess = (task) => {
+                        DebugLog('load sucess:' + that.url + meshConfig.fileSrc + ':' + meshConfig.fileName);
+                        DebugLog(task.loadedMeshes);
+                        task.loadedMeshes.forEach((mesh) => {
+                            mesh.actionManager = new BABYLON.ActionManager(this.scene);
+                            mesh.actionManager.registerAction(
+                                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, this.HighlightObj));
+                        });
 
+                        // task.loadedMeshes[0].parent = this.freeCamera;
+                    };
+
+                    meshTask.onError = (task, message, exception) => {
+                        DebugLog(message, exception);
+                    };
+                });
+
+
+                assetsManager.load();
+            }).catch((error) => {
+                DebugLog(error);
             });
-
-            // task.loadedMeshes[0].parent = this.freeCamera;
-        };
-        meshTask.onError = (task, message, exception) => {
-            console.log(message, exception);
-        };
-        assetsManager.load();
-        return false;
     }
 
 
@@ -81,12 +93,12 @@ class Container {
     public HighlightObj(evt: BABYLON.ActionEvent): void {
         const m = evt.meshUnderPointer;
         if (m) {
-        m.renderOutline = true;
-        m.outlineWidth = 0.1;
-        m.outlineColor = BABYLON.Color3.Yellow();
-        console.log('Run function!');
+            m.renderOutline = true;
+            m.outlineWidth = 0.1;
+            m.outlineColor = BABYLON.Color3.Yellow();
+            DebugLog('Run function!');
+        }
     }
-}
 }
 
 
