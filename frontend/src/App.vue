@@ -1,15 +1,25 @@
 <template>
-  <canvas id="renderCanvas"></canvas>
+<div>
+  <ContainerCanvas></ContainerCanvas>
+  <Toolbar></Toolbar>
+</div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import {Container} from './component/Container';
-
-  window.addEventListener('DOMContentLoaded', () => {
+import { Container } from './component/Container';
+import ContainerCanvas from './component/ContainerCanvas.vue';
+import Toolbar from './component/Toolbar.vue';
+window.addEventListener('DOMContentLoaded', () => {
     // Create the game using the 'renderCanvas'.
     const container = new Container('renderCanvas', 'static/objectModel/project1/');
   });
+  @Component({
+    components: {
+      Toolbar,
+      ContainerCanvas
+    }
+  })
 export default class App extends Vue {}
 </script>
 
