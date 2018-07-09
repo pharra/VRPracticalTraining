@@ -58,7 +58,7 @@ ROOT_URLCONF = 'VRPracticalTraining.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['frontend/dist'],
+        'DIRS': ['dist'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -124,10 +124,10 @@ USE_TZ = True
 STATIC_URL = 'webStatic/'
 
 OBJECTSTATIC_URL = 'static/'
-OBJECTSTATIC_PATH = os.path.join(BASE_DIR, 'frontend/static')
+OBJECTSTATIC_PATH = os.path.join(BASE_DIR, 'static')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "frontend/dist/webStatic"),
+    os.path.join(BASE_DIR, "dist/webStatic"),
 ]
 
-STATIC_PATH = os.path.join(BASE_DIR, 'frontend/dist/webStatic')
+STATIC_PATH = os.path.join(BASE_DIR, 'dist/webStatic')
