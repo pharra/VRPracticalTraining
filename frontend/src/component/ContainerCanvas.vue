@@ -5,11 +5,18 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Container } from './Container';
+
+@Component
 export default class ContainerCanvas extends Vue {
-  el: string = '#renderCanvas'
-  name: string = 'ContainerCanvas'
+  private el: string = '#renderCanvas';
+  private name: string = 'ContainerCanvas';
 }
 </script>
 
 <style>
+#renderCanvas {
+          width   : 80%;
+          height  : 100%;
+          touch-action: none;
+      }
 </style>

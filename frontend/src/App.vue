@@ -1,5 +1,5 @@
 <template>
-<div>
+<div style="width:100%;">
   <ContainerCanvas></ContainerCanvas>
   <Toolbar></Toolbar>
 </div>
@@ -16,11 +16,12 @@ window.addEventListener('DOMContentLoaded', () => {
   });
   @Component({
     components: {
+      ContainerCanvas,
       Toolbar,
-      ContainerCanvas
-    }
+    },
   })
-export default class App extends Vue {}
+export default class App extends Vue {
+}
 </script>
 
 <style>
