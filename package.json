@@ -11,6 +11,7 @@
     "axios": "^0.18.0",
     "babylonjs": "^3.2.0",
     "babylonjs-loaders": "^3.2.0",
+    "bootstrap": "^4.1.1",
     "vue": "^2.5.16",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^6.0.0"

@@ -51,12 +51,8 @@ class Container {
                         task.loadedMeshes.forEach((mesh) => {
                             mesh.actionManager = new BABYLON.ActionManager(that.scene);
                             mesh.actionManager.registerAction(
-<<<<<<< HEAD
-                                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, that.HighlightObj));
-=======
                                 new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, that.testFunction));
                             console.log('run success');
->>>>>>> YjtBranch
                         });
 
                         // task.loadedMeshes[0].parent = this.freeCamera;
