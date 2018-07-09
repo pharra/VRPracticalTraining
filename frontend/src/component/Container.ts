@@ -11,7 +11,6 @@ class Container {
     private freeCamera: BABYLON.FreeCamera | null = null;
     private arcRotateCamera: BABYLON.ArcRotateCamera | null = null;
     private light: BABYLON.Light | null = null;
-
     /**
      * create the container using the url of selected project
      * @param canvasElement canvas id
@@ -42,9 +41,9 @@ class Container {
             .then((response) => {
                 DebugLog(response.data);
                 response.data.forEach((meshConfig: any) => {
-                    const meshTask = assetsManager.addMeshTask(meshConfig.fileName, meshConfig.pName,
+                        const meshTask = assetsManager.addMeshTask(meshConfig.fileName, meshConfig.pName,
                         that.url + meshConfig.fileSrc, meshConfig.fileName);
-                    meshTask.onSuccess = (task) => {
+                        meshTask.onSuccess = (task) => {
                         DebugLog('load sucess:' + that.url + meshConfig.fileSrc + ':' + meshConfig.fileName);
                         DebugLog(task.loadedMeshes);
                         DebugLog(task.loadedParticleSystems);
@@ -52,14 +51,20 @@ class Container {
                         task.loadedMeshes.forEach((mesh) => {
                             mesh.actionManager = new BABYLON.ActionManager(that.scene);
                             mesh.actionManager.registerAction(
+<<<<<<< HEAD
                                 new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, that.HighlightObj));
+=======
+                                new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, that.testFunction));
+                            console.log('run success');
+>>>>>>> YjtBranch
                         });
 
                         // task.loadedMeshes[0].parent = this.freeCamera;
                     };
 
-                    meshTask.onError = (task, message, exception) => {
+                        meshTask.onError = (task, message, exception) => {
                         DebugLog(message, exception);
+                        console.log('Highlight Failed!');
                     };
                 });
 
@@ -95,12 +100,18 @@ class Container {
     public HighlightObj(evt: BABYLON.ActionEvent): void {
         DebugLog('Run preIf function!');
         const m = evt.meshUnderPointer;
-        if (m) {
+        if (m && m.renderOutline === false) {
             m.renderOutline = true;
             m.outlineWidth = 0.1;
             m.outlineColor = BABYLON.Color3.Yellow();
             DebugLog('Run function!');
+            console.log('run success');
+        } else if (m && m.renderOutline === true) {
+            m.renderOutline = false;
         }
+    }
+    public testFunction(): void {
+        console.log('Run test!');
     }
 }
 
