@@ -63,5 +63,5 @@ export default class Toolbar extends Vue {
 {
   width: 20%;
   float: right;
-  }
+}
 </style>

@@ -24,7 +24,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '9a0l4na30hh5d9r)%4=7&bx0_t=193b3^zzrdqrs9d$pb)=7%f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
+DEBUG=True
+try:
+    from . import config
+    DEBUG = config.DEBUG
+except ImportError:
+    DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -49,6 +55,7 @@ MIDDLEWARE = [
     #'django.contrib.auth.middleware.AuthenticationMiddleware',
     #'django.contrib.messages.middleware.MessageMiddleware',
     #'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'backend.middleware.SimpleMiddleware',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -79,8 +86,10 @@ WSGI_APPLICATION = 'VRPracticalTraining.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'VRPracticalTraining',
+        'USER': 'vruser',
+        'PASSWORD': '123456',
     }
 }
 
