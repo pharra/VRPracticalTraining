@@ -23,5 +23,5 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    url(r'^frontend/', include(backend.urls)),
+    url(r'^', include(backend.urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_PATH) + static(settings.OBJECTSTATIC_URL, document_root=settings.OBJECTSTATIC_PATH)
