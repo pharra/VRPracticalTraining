@@ -15,7 +15,9 @@
     "types": [
       "babylonjs",
       "babylonjs-loaders",
-      "node"    ],
+      "babylonjs-gui",
+      "node"
+    ],
     "paths": {
       "@/*": [
         "src/*"
