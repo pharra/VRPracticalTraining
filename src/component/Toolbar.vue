@@ -13,7 +13,7 @@
 									<a href="#menu" class="menuToggle"><span>Menu</span></a>
 									<div id="menu">
 										<ul>
-											<li><a href="index.html">Home</a></li>
+											<li><a href="home.html">Home</a></li>
 											<li><a href="Login.html">Sign Up</a></li>
 											<li><a href="Login.html">Log In</a></li>
 										</ul>
