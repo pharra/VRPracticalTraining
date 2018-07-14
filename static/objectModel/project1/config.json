@@ -1,18 +1,40 @@
 [
     {
-        "type": "mesh",
-        "fileSrc": "",
-        "fileName": "demo1.babylon",
-        "pName": "",
-        "position": [
-            0,
-            0,
-            0
+        "scene": [
+            {
+                "type": "mesh",
+                "fileSrc": "",
+                "fileName": "stone2.obj",
+                "pName": "",
+                "position": [
+                    0,
+                    0,
+                    0
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ]
+            }
         ],
-        "rotation": [
-            0,
-            0,
-            0
+        "tool": [
+            {
+                "type": "mesh",
+                "fileSrc": "",
+                "fileName": "rope_fragment.obj",
+                "pName": "",
+                "position": [
+                    0,
+                    0,
+                    0
+                ],
+                "rotation": [
+                    0,
+                    0,
+                    0
+                ]
+            }
         ]
     }
 ]

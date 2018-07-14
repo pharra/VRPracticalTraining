@@ -87,7 +87,7 @@ WSGI_APPLICATION = 'VRPracticalTraining.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'VRPracticalTraining',
+        'NAME': 'vrpt',
         'USER': 'vruser',
         'PASSWORD': '123456',
     }

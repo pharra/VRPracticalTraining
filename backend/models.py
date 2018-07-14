@@ -17,8 +17,8 @@ class Admin(models.Model):
 
 
 class Class(models.Model):
-    classid = models.IntegerField(primary_key=True)
-    teacherid = models.ForeignKey('User', models.DO_NOTHING, db_column='teacherid', blank=True, null=True)
+    classid = models.CharField(primary_key=True, max_length=45)
+    teacherid = models.ForeignKey('Teacher', models.DO_NOTHING, db_column='teacherid', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -27,8 +27,8 @@ class Class(models.Model):
 
 class Experiment(models.Model):
     experimentid = models.IntegerField(primary_key=True)
-    experimentname = models.CharField(max_length=45)
-    experimenturl = models.CharField(max_length=45)
+    experimentname = models.CharField(max_length=45, blank=True, null=True)
+    experimenturl = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -37,8 +37,8 @@ class Experiment(models.Model):
 
 class Report(models.Model):
     reportid = models.IntegerField(primary_key=True)
-    studentid = models.ForeignKey('User', models.DO_NOTHING, db_column='studentid')
-    reporturl = models.CharField(max_length=45)
+    studentid = models.ForeignKey('Student', models.DO_NOTHING, db_column='studentid', blank=True, null=True)
+    reporturl = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -47,8 +47,8 @@ class Report(models.Model):
 
 class Student(models.Model):
     studentid = models.ForeignKey('User', models.DO_NOTHING, db_column='studentid', unique=True)
-    studentname = models.CharField(max_length=45)
-    studentclass = models.ForeignKey(Class, models.DO_NOTHING, db_column='studentclass')
+    class_field = models.ForeignKey(Class, models.DO_NOTHING, db_column='class', blank=True, null=True)  # Field renamed because it was a Python reserved word.
+    studentname = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -66,9 +66,12 @@ class Teacher(models.Model):
 
 class User(models.Model):
     userid = models.AutoField(primary_key=True)
-    usertype = models.CharField(max_length=7, blank=True, null=True)
-    usernum = models.CharField(max_length=45, blank=True, null=True)
-    password = models.CharField(max_length=45, blank=True, null=True)
+    username = models.CharField(unique=True, max_length=45)
+    usertype = models.CharField(max_length=7)
+    password = models.CharField(max_length=45)
+    phone = models.CharField(unique=True, max_length=45, blank=True, null=True)
+    email = models.CharField(unique=True, max_length=45, blank=True, null=True)
+    nickname = models.CharField(unique=True, max_length=45)
 
     class Meta:
         managed = False
