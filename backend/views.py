@@ -24,13 +24,13 @@ def post_login(request):
         if user == 0:
             return JsonResponse({'error': '用户不存在'})
         pswObj = models.User.objects.get(email=u_name)
-        if pswObj.hasconfirm is False:
-            return JsonResponse({'error': '请到邮箱验证您的账号'})
+        # if pswObj.hasconfirm is False:
+            # return JsonResponse({'error': '请到邮箱验证您的账号'})
     else:
-        user = models.User.objects.filter(phonenum=u_name).count()
+        user = models.User.objects.filter(phone=u_name).count()
         if user == 0:
             return JsonResponse({'error': '用户不存在'})
-        pswObj = models.User.objects.get(phonenum=u_name)
+        pswObj = models.User.objects.get(phone=u_name)
 
     psw = encryption(request.POST.get('password'))
     password = bytes.decode(pswObj.password.encode("UTF-8"))
@@ -38,9 +38,9 @@ def post_login(request):
         # 返回cookie，在浏览器关闭前维持登录状态
         response = JsonResponse({'error': ''})
 
-        u_id = bytes.decode(pswObj.id.encode("UTF-8"))
+        u_id = bytes.decode(bytes(str(pswObj.userid),"UTF-8"))
         value = u_id + "_" + encryption(u_id + psw)
-        response.set_cookie(key="uhui", value=value, httponly=True)
+        response.set_cookie(key="vrpt", value=value, httponly=True)
         return response
     else:
         return JsonResponse({'error': '密码错误'})
@@ -48,7 +48,7 @@ def post_login(request):
 
 def post_logout(request):
     response = HttpResponseRedirect('/')
-    response.delete_cookie('uhui')
+    response.delete_cookie('vrpt')
     return response
 
 
