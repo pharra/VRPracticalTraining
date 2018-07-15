@@ -70,6 +70,7 @@ def post_signUp(request):
         if models.User.objects.filter(nickname=nickname):
             return JsonResponse({'errno': '1', 'message': '昵称已存在'})
         # 将邮箱作为用户名存入数据库中
+
         # uid = randomID()
         # 邮箱验证
         # sendConfirmMail(username, nickname, uid)
@@ -101,8 +102,10 @@ def post_signUp(request):
         # createLists(user)
         return JsonResponse({'errno': '0', 'message': '注册成功'})
 
+
 def encryption(md5):
     key = 'VRPTSever'
     m = hashlib.md5()
     m.update(md5.join(key).encode("UTF-8"))
     return m.hexdigest()
+    
