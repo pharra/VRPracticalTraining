@@ -8,13 +8,16 @@ class Container {
     private canvas: HTMLCanvasElement;
     private engine: BABYLON.Engine;
     private scene: BABYLON.Scene;
-    private choseScene: BABYLON.Scene;
+    private secondScene: BABYLON.Scene;
     private freeCamera: BABYLON.FreeCamera | null = null;
     private arcRotateCamera: BABYLON.ArcRotateCamera | null = null;
     private light: BABYLON.Light | null = null;
     private configJson: any | null = null;
     private showMainScene: boolean = true;
-    private advancedTexture: BABYLON.GUI.AdvancedDynamicTexture | null = null;
+    private advancedTexture: BABYLON.GUI.AdvancedDynamicTexture;
+    private secondAdvancedTexture: BABYLON.GUI.AdvancedDynamicTexture;
+    private button: BABYLON.GUI.Button;
+    private choseObject: BABYLON.AbstractMesh | null = null;
 
 
     /**
@@ -27,7 +30,12 @@ class Container {
         this.canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
         this.engine = new BABYLON.Engine(this.canvas, true);
         this.scene = new BABYLON.Scene(this.engine);
-        this.choseScene = new BABYLON.Scene(this.engine);
+        this.secondScene = new BABYLON.Scene(this.engine);
+        this.advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true,
+        this.scene);
+        this.secondAdvancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI',
+        true, this.secondScene);
+        this.button = BABYLON.GUI.Button.CreateSimpleButton('switch', 'details');
         this.preload();
     }
 
@@ -53,9 +61,9 @@ class Container {
 
         assetsManager.onFinish = (tasks) => {
             this.createScene();
-            this.createGUI(this.showMainScene);
+            this.createGUI();
             if (this.advancedTexture) {
-            this.switchScene(this.advancedTexture);
+                this.switchScene(this.advancedTexture);
             }
         };
         this.configJson[0].scene.forEach((meshConfig: any) => {
@@ -91,41 +99,52 @@ class Container {
         this.light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.scene);
 
         // this.scene.debugLayer.show();
+
+        this.arcRotateCamera = new BABYLON.ArcRotateCamera('arcRotateCemera',
+            0, 0, 10, BABYLON.Vector3.Zero(), this.secondScene);
+        this.arcRotateCamera.attachControl(this.canvas, true);
+
+        // Create a basic light, aiming 0,1,0 - meaning, to the sky.
+        this.light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.secondScene);
     }
 
-    public createGUI(showMainScene: boolean) {
+    public createGUI() {
 
-        if (showMainScene) {
-            this.advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, this.scene);
-        } else {
-            this.advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true, this.choseScene);
-        }
-        const button: BABYLON.GUI.Button = BABYLON.GUI.Button.CreateSimpleButton('switch', 'details');
-        this.advancedTexture.addControl(button);
+        this.button.width = 0.2;
+        this.button.height = '40px';
+        this.button.color = 'white';
+        this.button.background = 'green';
+        this.button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
 
-        button.width = 0.2;
-        button.height = '40px';
-        button.color = 'white';
-        button.background = 'green';
-        button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-
-        button.onPointerUpObservable.add(() => {
+        this.button.onPointerClickObservable.clear();
+        this.button.onPointerClickObservable.add(() => {
+            DebugLog(this.showMainScene);
             this.showMainScene = !this.showMainScene;
         });
+
+        if (this.showMainScene) {
+            this.advancedTexture.addControl(this.button);
+        } else {
+            this.secondAdvancedTexture.addControl(this.button);
+        }
     }
 
     public switchScene(advancedTexture: BABYLON.GUI.AdvancedDynamicTexture) {
+        // setTimeout(() => {
+        DebugLog('render');
+        this.engine.stopRenderLoop();
         this.engine.runRenderLoop(() => {
             if (this.showMainScene) {
-                advancedTexture.dispose();
-                this.createGUI(this.showMainScene);
+                // advancedTexture.dispose();
+                this.createGUI();
                 this.scene.render();
             } else {
-                advancedTexture.dispose();
-                this.createGUI(this.showMainScene);
-                this.choseScene.render();
+                // advancedTexture.dispose();
+                this.createGUI();
+                this.secondScene.render();
             }
         });
+        // }, 500);
     }
 
     public doRender(): void {
@@ -141,6 +160,8 @@ class Container {
     }
     public HighlightObj(evt: BABYLON.ActionEvent): void {
         const m = evt.meshUnderPointer;
+        this.choseObject = m;
+        // DebugLog(m);
         if (m && m.renderOutline === false) {
             m.renderOutline = true;
             m.outlineWidth = 0.1;
