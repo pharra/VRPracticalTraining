@@ -194,7 +194,7 @@ function login_handler() {
         url: '/post_login',
         type: 'POST',
         dataType: 'json',
-        data: {"username": $("#login-username").val(), "password": $.md5($("#login-password").val() + "UHui")},
+        data: {"username": $("#login-username").val(), "password": $.md5($("#login-password").val() + "VRPT")},
         timeout: 3000,
         cache: false,
         async: false,

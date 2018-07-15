@@ -4,6 +4,8 @@ from django.shortcuts import render
 from backend import models
 import json
 from .shortcut import JsonResponse, render
+import hashlib
+from VRPracticalTraining.settings import DEBUG
 # post方法加上前缀post_
 
 DEFAULT_PIC = 'images/avatar/default.jpg'
@@ -68,12 +70,12 @@ def post_signUp(request):
         if models.User.objects.filter(nickname=nickname):
             return JsonResponse({'errno': '1', 'message': '昵称已存在'})
         # 将邮箱作为用户名存入数据库中
-        uid = randomID()
+        # uid = randomID()
         # 邮箱验证
-        sendConfirmMail(username, nickname, uid)
+        # sendConfirmMail(username, nickname, uid)
 
-        user = models.User(id=uid, nickname=nickname, password=password, email=username, ucoin=0,
-                           hasconfirm=False, avatar=DEFAULT_PIC)
+        user = models.User(nickname=nickname, password=password, email=username,
+                            usertype='student')
 
         # 创建列表
         user.save()
@@ -82,7 +84,7 @@ def post_signUp(request):
         return JsonResponse({'errno': '2', 'message': '请检查验证邮件'})
 
     else:
-        if models.User.objects.filter(phonenum=username).exists():
+        if models.User.objects.filter(phone=username).exists():
             return JsonResponse({'errno': '1', 'message': '手机号已被注册'})
         # 查询数据库中昵称是否存在
         if models.User.objects.filter(nickname=nickname):
@@ -91,11 +93,16 @@ def post_signUp(request):
         pass
         # 将手机号作为用户名存入数据库中
         uid = randomID()
-        user = models.User(id=uid, nickname=nickname, password=password, gender=gender,
-                           phonenum=username, ucoin=0, hasconfirm=True, avatar=DEFAULT_PIC)
+        user = models.User(nickname=nickname, password=password,phone=username,
+                            usertype='student')
         user.save()
         # 创建列表
 
         # createLists(user)
         return JsonResponse({'errno': '0', 'message': '注册成功'})
 
+def encryption(md5):
+    key = 'VRPTSever'
+    m = hashlib.md5()
+    m.update(md5.join(key).encode("UTF-8"))
+    return m.hexdigest()
