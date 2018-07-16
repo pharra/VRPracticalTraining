@@ -16,7 +16,7 @@ class Container {
     private showMainScene: boolean = true;
     private advancedTexture: BABYLON.GUI.AdvancedDynamicTexture;
     private secondAdvancedTexture: BABYLON.GUI.AdvancedDynamicTexture;
-    private button: BABYLON.GUI.Button;
+    private toolButtons: BABYLON.GUI.Button[] = [];
     private choseObject: BABYLON.AbstractMesh | null = null;
 
 
@@ -32,15 +32,44 @@ class Container {
         this.scene = new BABYLON.Scene(this.engine);
         this.secondScene = new BABYLON.Scene(this.engine);
         this.advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true,
-        this.scene);
+            this.scene);
         this.secondAdvancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI',
-        true, this.secondScene);
-        this.button = BABYLON.GUI.Button.CreateSimpleButton('switch', 'details');
+            true, this.secondScene);
+
+        this.loadToolButtons();
+
+
         this.preload();
     }
 
+    /**
+     * load toolButtons to this.toolButtons
+     */
+    private loadToolButtons() {
 
-    public preload() {
+
+        // create && setting switch button style
+        const switchButton = BABYLON.GUI.Button.CreateImageOnlyButton('switch', '/static/share/operation.png');
+        switchButton.width = '30px';
+        switchButton.height = '30px';
+        switchButton.thickness = 0;
+        switchButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+        switchButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        switchButton.onPointerClickObservable.clear();
+        switchButton.onPointerClickObservable.add(() => {
+            this.showMainScene = !this.showMainScene;
+            DebugLog(this.choseObject);
+            if (!this.showMainScene && this.choseObject) {
+                this.secondScene.addMesh(this.choseObject);
+            } else {
+                this.showMainScene = !this.showMainScene;
+            }
+        });
+
+        this.toolButtons.push(switchButton);
+    }
+
+    private preload() {
         Axios.get(this.url + 'config.json')
             .then((response) => {
                 DebugLog(response.data);
@@ -52,7 +81,7 @@ class Container {
     }
 
 
-    public loadScene() {
+    private loadScene() {
         const assetsManager = new BABYLON.AssetsManager(this.scene);
         assetsManager.onProgress = (remainingCount, totalCount, lastFinishedTask) => {
             this.engine.loadingUIText = 'We are loading the scene. ' +
@@ -91,7 +120,7 @@ class Container {
     }
 
 
-    public createScene(): void {
+    private createScene(): void {
         this.freeCamera = new BABYLON.FreeCamera('FreeCamera', new BABYLON.Vector3(0, 0, 0), this.scene);
         this.freeCamera.attachControl(this.canvas, true);
 
@@ -108,28 +137,20 @@ class Container {
         this.light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.secondScene);
     }
 
-    public createGUI() {
-
-        this.button.width = 0.2;
-        this.button.height = '40px';
-        this.button.color = 'white';
-        this.button.background = 'green';
-        this.button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-
-        this.button.onPointerClickObservable.clear();
-        this.button.onPointerClickObservable.add(() => {
-            DebugLog(this.showMainScene);
-            this.showMainScene = !this.showMainScene;
-        });
+    private createGUI() {
 
         if (this.showMainScene) {
-            this.advancedTexture.addControl(this.button);
+            for (const button of this.toolButtons) {
+                this.advancedTexture.addControl(button);
+            }
         } else {
-            this.secondAdvancedTexture.addControl(this.button);
+            for (const button of this.toolButtons) {
+                this.secondAdvancedTexture.addControl(button);
+            }
         }
     }
 
-    public switchScene(advancedTexture: BABYLON.GUI.AdvancedDynamicTexture) {
+    private switchScene(advancedTexture: BABYLON.GUI.AdvancedDynamicTexture) {
         // setTimeout(() => {
         DebugLog('render');
         this.engine.stopRenderLoop();
@@ -138,16 +159,30 @@ class Container {
                 // advancedTexture.dispose();
                 this.createGUI();
                 this.scene.render();
-            } else {
+                window.removeEventListener('resize', () => {
+                    this.engine.resize();
+                });
+                window.addEventListener('resize', () => {
+                    this.engine.resize();
+                });
+                // this.scene.debugLayer.show();
+            } else if (this.choseObject) {
                 // advancedTexture.dispose();
                 this.createGUI();
                 this.secondScene.render();
+                window.removeEventListener('resize', () => {
+                    this.engine.resize();
+                });
+                window.addEventListener('resize', () => {
+                    this.engine.resize();
+                });
+                // this.secondScene.debugLayer.show();
             }
         });
         // }, 500);
     }
 
-    public doRender(): void {
+    private doRender(): void {
         // Run the render loop.
         this.engine.runRenderLoop(() => {
             this.scene.render();
@@ -158,18 +193,20 @@ class Container {
             this.engine.resize();
         });
     }
-    public HighlightObj(evt: BABYLON.ActionEvent): void {
+
+
+    private HighlightObj(evt: BABYLON.ActionEvent): void {
         const m = evt.meshUnderPointer;
-        this.choseObject = m;
-        // DebugLog(m);
         if (m && m.renderOutline === false) {
             m.renderOutline = true;
             m.outlineWidth = 0.1;
             m.outlineColor = BABYLON.Color3.Yellow();
             DebugLog('Run function: HighlightObj!');
+           // this.choseObject = m.clone(m.name, );
         } else if (m && m.renderOutline === true) {
             DebugLog('Run function: Remove HighlightObj!');
             m.renderOutline = false;
+            this.choseObject = null;
         }
     }
 }
