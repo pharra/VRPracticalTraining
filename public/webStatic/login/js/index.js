@@ -129,7 +129,7 @@ $('#re-password,#password').blur('input propertychange', function () {
         $('#password_content').hide();
         removechecked("#re-password");
         CheckedCss("#re-password");
-        $("#signup-md5-password").val($.md5($("#re-password").val() + "VRPT"));
+        $("#signup-md5-password").val($.md5($("#re-password").val() + "UHui"));
     } else if (($('#re-password').val() === "") || ($('#password').val() === "")) {
         $('#password_content').hide();
         removechecked("#re-password");
@@ -144,7 +144,7 @@ $('#mobile_re-password,#mobile_password').blur('input propertychange', function 
         $('#mobile_password_content').hide();
         removechecked("#mobile_re-password");
         CheckedCss("#mobile_re-password");
-        $("#signup-md5-password").val($.md5($("#mobile_re-password").val() + "VRPT"));
+        $("#signup-md5-password").val($.md5($("#mobile_re-password").val() + "UHui"));
     } else if (($('#mobile_re-password').val() === "") || ($('#mobile_password').val() === "")) {
         $('#mobile_password_content').hide();
         removechecked("#mobile_re-password");
@@ -194,7 +194,7 @@ function login_handler() {
         url: '/post_login',
         type: 'POST',
         dataType: 'json',
-        data: {"username": $("#login-username").val(), "password": $.md5($("#login-password").val() + "VRPT")},
+        data: {"username": $("#login-username").val(), "password": $.md5($("#login-password").val() + "UHui")},
         timeout: 3000,
         cache: false,
         async: false,
@@ -369,8 +369,8 @@ function func_edit_userinfo_submit() {
         content.nickname = $("#newname").val();
     }
     if ($("#newpassword").val() && $("#oldpassword").val()) {
-        content.password = $.md5($("#newpassword").val() + 'VRPT');
-        content.oldPassword = $.md5($("#oldpassword").val() + 'VRPT');
+        content.password = $.md5($("#newpassword").val() + 'UHui');
+        content.oldPassword = $.md5($("#oldpassword").val() + 'UHui');
     }
     if ($("#newemail").val() && $("#email_verification_code").val()) {
         content.email = $("#newemail").val();
