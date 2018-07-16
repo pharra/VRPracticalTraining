@@ -5,23 +5,6 @@
 			<div id='page-wrapper'>
 
 				<!-- Header -->
-					<header id='header' class='alt'>
-						<h1><a href='index.html'>VR Practical</a></h1>
-						<nav id='nav'>
-							<ul>
-								<li class='special'>
-									<a href='#menu' class='menuToggle'><span>Menu</span></a>
-									<div id='menu'>
-										<ul>
-											<li><a href="home.html">Home</a></li>
-											<li><a href="Login.html">Sign Up</a></li>
-											<li ><a href="Login.html">Log In</a></li>
-										</ul>
-									</div>
-								</li>
-							</ul>
-						</nav>
-					</header>
 
 				<!-- Banner -->
 					<section id='banner'>
@@ -58,6 +41,7 @@ export default class Toolbar extends Vue {
 <style>
 #toolbar {
   width: 20%;
+	height: 94%;
   float: right;
 }
 </style>

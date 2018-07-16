@@ -16,7 +16,7 @@ export default class ContainerCanvas extends Vue {
 <style>
 #renderCanvas {
           width   : 80%;
-          height  : 100%;
+          height  : 94%;
           touch-action: none;
       }
 </style>
