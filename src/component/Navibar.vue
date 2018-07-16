@@ -29,10 +29,6 @@
 			
 							<li><a href="/login">登陆</a></li>
 							<li><a href="/login">注册</a></li>
-						
-						<li>
-							<a href="#" id="search-pop"><i class="fa fa-search"></i></a>
-						</li>
 					</ul>
 					<div class="mobile-menu hidden-lg hidden-md hidden-sm">
 						<span></span>
