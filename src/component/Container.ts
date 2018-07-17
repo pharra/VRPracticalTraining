@@ -3,6 +3,7 @@ import 'babylonjs-loaders';
 import Axios from 'axios';
 import DebugLog from '@/lib/DebugLog';
 import 'babylonjs-gui';
+import Share from './Share';
 
 class Container {
     private canvas: HTMLCanvasElement;
@@ -17,7 +18,7 @@ class Container {
     private advancedTexture: BABYLON.GUI.AdvancedDynamicTexture;
     private secondAdvancedTexture: BABYLON.GUI.AdvancedDynamicTexture;
     private toolButtons: BABYLON.GUI.Button[] = [];
-    private choseObject: BABYLON.AbstractMesh | null = null;
+    private choseMesh: BABYLON.AbstractMesh | null = null;
 
 
     /**
@@ -38,7 +39,6 @@ class Container {
 
         this.loadToolButtons();
 
-
         this.preload();
     }
 
@@ -58,12 +58,17 @@ class Container {
         switchButton.onPointerClickObservable.clear();
         switchButton.onPointerClickObservable.add(() => {
             this.showMainScene = !this.showMainScene;
-            DebugLog(this.choseObject);
-            if (!this.showMainScene && this.choseObject) {
-                this.secondScene.addMesh(this.choseObject);
-            } else {
+            if (!this.showMainScene && this.choseMesh) {
+                // const parentBox = BABYLON.Mesh.CreateBox('parentBox', 1, this.secondScene);
+                // const m = this.choseMesh.clone(this.choseMesh.name,parentBox);
+                // if (m) {
+                this.createSecondScene();
+                this.secondScene.addMesh(this.choseMesh);
+                // }
+            } else if (!this.showMainScene) {
                 this.showMainScene = !this.showMainScene;
             }
+            DebugLog(this.showMainScene);
         });
 
         this.toolButtons.push(switchButton);
@@ -120,6 +125,15 @@ class Container {
     }
 
 
+    private createSecondScene() {
+        this.arcRotateCamera = new BABYLON.ArcRotateCamera('arcRotateCemera',
+            0, 0, 1000, BABYLON.Vector3.Zero(), this.secondScene);
+        this.arcRotateCamera.attachControl(this.canvas, true);
+
+        // Create a basic light, aiming 0,1,0 - meaning, to the sky.
+        this.light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.secondScene);
+    }
+
     private createScene(): void {
         this.freeCamera = new BABYLON.FreeCamera('FreeCamera', new BABYLON.Vector3(0, 0, 0), this.scene);
         this.freeCamera.attachControl(this.canvas, true);
@@ -128,13 +142,6 @@ class Container {
         this.light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.scene);
 
         // this.scene.debugLayer.show();
-
-        this.arcRotateCamera = new BABYLON.ArcRotateCamera('arcRotateCemera',
-            0, 0, 10, BABYLON.Vector3.Zero(), this.secondScene);
-        this.arcRotateCamera.attachControl(this.canvas, true);
-
-        // Create a basic light, aiming 0,1,0 - meaning, to the sky.
-        this.light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.secondScene);
     }
 
     private createGUI() {
@@ -166,7 +173,7 @@ class Container {
                     this.engine.resize();
                 });
                 // this.scene.debugLayer.show();
-            } else if (this.choseObject) {
+            } else if (this.choseMesh) {
                 // advancedTexture.dispose();
                 this.createGUI();
                 this.secondScene.render();
@@ -182,31 +189,30 @@ class Container {
         // }, 500);
     }
 
-    private doRender(): void {
-        // Run the render loop.
-        this.engine.runRenderLoop(() => {
-            this.scene.render();
-        });
-
-        // The canvas/window resize event handler.
-        window.addEventListener('resize', () => {
-            this.engine.resize();
-        });
-    }
-
-
-    private HighlightObj(evt: BABYLON.ActionEvent): void {
+    private HighlightObj = (evt: BABYLON.ActionEvent) => {
         const m = evt.meshUnderPointer;
         if (m && m.renderOutline === false) {
+
+            const parentBox = BABYLON.Mesh.CreateBox('parentBox', 1, this.secondScene);
+            // parentBox.isVisible = false;
+            this.choseMesh = m.clone(m.name, parentBox);
+            // this.secondScene.addMesh(m);
+            if (this.choseMesh) {
+                // this.choseMesh.parent = undefined;
+                this.choseMesh.actionManager = null;
+            }
+
             m.renderOutline = true;
             m.outlineWidth = 0.1;
             m.outlineColor = BABYLON.Color3.Yellow();
             DebugLog('Run function: HighlightObj!');
-           // this.choseObject = m.clone(m.name, );
+
+            DebugLog(m);
         } else if (m && m.renderOutline === true) {
             DebugLog('Run function: Remove HighlightObj!');
             m.renderOutline = false;
-            this.choseObject = null;
+            this.choseMesh = null;
+            DebugLog(this.choseMesh);
         }
     }
 }
