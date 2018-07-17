@@ -3,8 +3,8 @@
         "scene": [
             {
                 "type": "mesh",
-                "fileSrc": "",
-                "fileName": "stone2.obj",
+                "fileSrc": "babylon/",
+                "fileName": "mount.babylon",
                 "pName": "",
                 "position": [
                     0,
