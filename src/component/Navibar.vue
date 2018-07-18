@@ -63,7 +63,7 @@ export default class Navibar extends Vue {
 
 <style>
 #Navibar {
-  height: 6%;
+  height: 75px;
   touch-action: none;
 }
 </style>

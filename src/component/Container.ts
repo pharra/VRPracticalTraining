@@ -25,7 +25,7 @@ class Container {
      * @param canvasElement canvas id
      * @param url the url for project, end with /
      */
-    constructor(canvasElement: string, private url: string) {
+    constructor(canvasElement: string, public url: string) {
         // Create canvas and engine.
         this.canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
         this.engine = new BABYLON.Engine(this.canvas, true);

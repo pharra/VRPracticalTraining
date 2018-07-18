@@ -6,6 +6,8 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Container } from './Container';
 
+
+
 @Component
 export default class ContainerCanvas extends Vue {
   private el: string = '#renderCanvas';
