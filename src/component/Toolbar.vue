@@ -1,10 +1,17 @@
 <template>
-  <div id='toolbar'>{{info}}
+  <div id='toolbar' :class="{test:show}">
+    <h1><span class="label label-default">{{ObjSample.info1}}</span></h1><br>
+    <hr>
+    <h3>{{ObjSample.info2}}</h3><br>
+    <h3>{{ObjSample.info3}}</h3><br>
+    <h3>{{ObjSample.info4}}</h3><br>
+    <button v-on:click="show = !show"> click</button>
   </div>
 </template>
 
 <script lang='ts'>
 import { Component, Vue } from 'vue-property-decorator';
+import { ObjInfo } from './ObjInfo';
 import Axios from 'axios';
 import DebugLog from '@/lib/DebugLog';
 
@@ -14,40 +21,19 @@ import DebugLog from '@/lib/DebugLog';
 export default class Toolbar extends Vue {
   private el: string = '#toolbar';
   private name: string = 'Toolbar';
-  private ObjInfoJson: any | null = null;
-  private url: string = 'static/objectModel/project1/';
-  private info: string = "";
-
-  constructor(){
-    super();
-    this.preload();
-  }
-
-  public preload = () => {
-        Axios.get(this.url + 'ObjInfo.json')
-            .then((response) => {
-                DebugLog("123");
-                DebugLog(response.data);
-                this.ObjInfoJson = response.data;
-                // this.GetObjInfo();
-                this.info = this.ObjInfoJson[0].Stone1.type;
-            }).catch((error) => {
-                DebugLog(error);
-            });
-    }
-    public GetObjInfo = () => {
-      // this.ObjInfoJson[0].Stone1.forEach((sample: any) => {
-      
-      //})
-    }
+  private ObjSample: ObjInfo = new ObjInfo();
+  private show: boolean = true;
 }
 </script>
 
 
-<style>
+<style scoped>
 #toolbar {
   width: 20%;
 	height: 94%;
   float: right;
+}
+.test{
+  background-color: blue;
 }
 </style>
