@@ -3,8 +3,8 @@
         "scene": [
             {
                 "type": "mesh",
-                "fileSrc": "",
-                "fileName": "landspace.babylon",
+                "fileSrc": "babylon/",
+                "fileName": "mount.babylon",
                 "pName": "",
                 "position": [
                     0,

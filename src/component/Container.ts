@@ -3,21 +3,17 @@ import 'babylonjs-loaders';
 import Axios from 'axios';
 import DebugLog from '@/lib/DebugLog';
 import 'babylonjs-gui';
+import Share from './Share';
 
 class Container {
     private canvas: HTMLCanvasElement;
     private engine: BABYLON.Engine;
     private scene: BABYLON.Scene;
-    private secondScene: BABYLON.Scene;
     private freeCamera: BABYLON.FreeCamera | null = null;
-    private arcRotateCamera: BABYLON.ArcRotateCamera | null = null;
     private light: BABYLON.Light | null = null;
     private configJson: any | null = null;
-    private showMainScene: boolean = true;
     private advancedTexture: BABYLON.GUI.AdvancedDynamicTexture;
-    private secondAdvancedTexture: BABYLON.GUI.AdvancedDynamicTexture;
-    private button: BABYLON.GUI.Button;
-    private choseObject: BABYLON.AbstractMesh | null = null;
+    private toolButtons: BABYLON.GUI.Button[] = [];
 
 
     /**
@@ -30,17 +26,36 @@ class Container {
         this.canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
         this.engine = new BABYLON.Engine(this.canvas, true);
         this.scene = new BABYLON.Scene(this.engine);
-        this.secondScene = new BABYLON.Scene(this.engine);
         this.advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI', true,
-        this.scene);
-        this.secondAdvancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI',
-        true, this.secondScene);
-        this.button = BABYLON.GUI.Button.CreateSimpleButton('switch', 'details');
+            this.scene);
+
+        this.loadToolButtons();
+
         this.preload();
     }
 
+    /**
+     * load toolButtons to this.toolButtons
+     */
+    private loadToolButtons() {
 
-    public preload() {
+
+        // create && setting switch button style
+        const switchButton = BABYLON.GUI.Button.CreateImageOnlyButton('switch', '/static/share/operation.png');
+        switchButton.width = '30px';
+        switchButton.height = '30px';
+        switchButton.thickness = 0;
+        switchButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+        switchButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        switchButton.onPointerClickObservable.clear();
+        switchButton.onPointerClickObservable.add(() => {
+            this.switchToMainScene();
+        });
+
+        this.toolButtons.push(switchButton);
+    }
+
+    private preload() {
         Axios.get(this.url + 'config.json')
             .then((response) => {
                 DebugLog(response.data);
@@ -52,7 +67,7 @@ class Container {
     }
 
 
-    public loadScene() {
+    private loadScene() {
         const assetsManager = new BABYLON.AssetsManager(this.scene);
         assetsManager.onProgress = (remainingCount, totalCount, lastFinishedTask) => {
             this.engine.loadingUIText = 'We are loading the scene. ' +
@@ -61,9 +76,12 @@ class Container {
 
         assetsManager.onFinish = (tasks) => {
             this.createScene();
-            this.createGUI();
+            this.createGUI(this.advancedTexture);
             if (this.advancedTexture) {
-                this.switchScene(this.advancedTexture);
+                for (const button of this.toolButtons) {
+                    this.advancedTexture.addControl(button);
+                }
+                this.renderScene(this.advancedTexture, this.scene);
             }
         };
         this.configJson[0].scene.forEach((meshConfig: any) => {
@@ -75,7 +93,7 @@ class Container {
                     mesh.position = BABYLON.Vector3.Zero();
                     mesh.actionManager = new BABYLON.ActionManager(this.scene);
                     mesh.actionManager.registerAction(
-                        new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, this.HighlightObj));
+                        new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, this.switchToSecondScene));
                     DebugLog('run meshTask success:' + mesh.name);
                 });
 
@@ -91,7 +109,8 @@ class Container {
     }
 
 
-    public createScene(): void {
+
+    private createScene(): void {
         this.freeCamera = new BABYLON.FreeCamera('FreeCamera', new BABYLON.Vector3(0, 0, 0), this.scene);
         this.freeCamera.attachControl(this.canvas, true);
 
@@ -99,78 +118,70 @@ class Container {
         this.light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.scene);
 
         // this.scene.debugLayer.show();
-
-        this.arcRotateCamera = new BABYLON.ArcRotateCamera('arcRotateCemera',
-            0, 0, 10, BABYLON.Vector3.Zero(), this.secondScene);
-        this.arcRotateCamera.attachControl(this.canvas, true);
-
-        // Create a basic light, aiming 0,1,0 - meaning, to the sky.
-        this.light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.secondScene);
     }
 
-    public createGUI() {
-
-        this.button.width = 0.2;
-        this.button.height = '40px';
-        this.button.color = 'white';
-        this.button.background = 'green';
-        this.button.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
-
-        this.button.onPointerClickObservable.clear();
-        this.button.onPointerClickObservable.add(() => {
-            DebugLog(this.showMainScene);
-            this.showMainScene = !this.showMainScene;
-        });
-
-        if (this.showMainScene) {
-            this.advancedTexture.addControl(this.button);
-        } else {
-            this.secondAdvancedTexture.addControl(this.button);
-        }
+    private createGUI(advancedTexture: BABYLON.GUI.AdvancedDynamicTexture) {
+        DebugLog('createGUI:' + advancedTexture.name);
     }
 
-    public switchScene(advancedTexture: BABYLON.GUI.AdvancedDynamicTexture) {
+    private renderScene(advancedTexture: BABYLON.GUI.AdvancedDynamicTexture, scene: BABYLON.Scene) {
         // setTimeout(() => {
         DebugLog('render');
         this.engine.stopRenderLoop();
         this.engine.runRenderLoop(() => {
-            if (this.showMainScene) {
-                // advancedTexture.dispose();
-                this.createGUI();
-                this.scene.render();
-            } else {
-                // advancedTexture.dispose();
-                this.createGUI();
-                this.secondScene.render();
-            }
+
+            // advancedTexture.dispose();
+            this.createGUI(advancedTexture);
+            scene.render();
+            // this.scene.debugLayer.show();
+            window.removeEventListener('resize', () => {
+                this.engine.resize();
+            });
+            window.addEventListener('resize', () => {
+                this.engine.resize();
+            });
         });
         // }, 500);
     }
 
-    public doRender(): void {
-        // Run the render loop.
-        this.engine.runRenderLoop(() => {
-            this.scene.render();
-        });
+    private switchToSecondScene = (evt: BABYLON.ActionEvent) => {
 
-        // The canvas/window resize event handler.
-        window.addEventListener('resize', () => {
-            this.engine.resize();
-        });
-    }
-    public HighlightObj(evt: BABYLON.ActionEvent): void {
         const m = evt.meshUnderPointer;
-        this.choseObject = m;
-        // DebugLog(m);
-        if (m && m.renderOutline === false) {
-            m.renderOutline = true;
-            m.outlineWidth = 0.1;
-            m.outlineColor = BABYLON.Color3.Yellow();
-            DebugLog('Run function: HighlightObj!');
-        } else if (m && m.renderOutline === true) {
-            DebugLog('Run function: Remove HighlightObj!');
-            m.renderOutline = false;
+
+        if (m) {
+            BABYLON.SceneLoader.Load(this.url + 'obj/', m.name + '.obj', this.engine, (newScene) => {
+                const ArcRotateCamera = new BABYLON.ArcRotateCamera('ArcRotateCamera', 0, 0, 100,
+                    BABYLON.Vector3.Zero(), newScene);
+                ArcRotateCamera.attachControl(this.canvas, true);
+
+                // Create a basic light, aiming 0,1,0 - meaning, to the sky.
+                const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), newScene);
+                const advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI('secondUI', true,
+                    newScene);
+                for (const button of this.toolButtons) {
+                    advancedTexture.addControl(button);
+                }
+                this.renderScene(advancedTexture, newScene);
+            });
         }
+
+
+        // if (m && m.renderOutline === false) {
+
+        //     m.renderOutline = true;
+        //     m.outlineWidth = 0.1;
+        //     m.outlineColor = BABYLON.Color3.Yellow();
+        //     DebugLog('Run function: HighlightObj!');
+
+        //     DebugLog(m);
+        // } else if (m && m.renderOutline === true) {
+        //     DebugLog('Run function: Remove HighlightObj!');
+        //     m.renderOutline = false;
+        // }
+    }
+
+    private switchToMainScene = () => {
+        this.renderScene(this.advancedTexture,this.scene);
     }
 }
 
