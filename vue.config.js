@@ -22,7 +22,7 @@ module.exports = {
     pages: {
       home: {
         // entry for the page
-        entry: 'src/home/home.js',
+        entry: 'src/home/home.ts',
         // the source template
         template: 'public/home.html',
         // output as dist/index.html
@@ -48,7 +48,7 @@ module.exports = {
       },
       login: {
         // entry for the page
-        entry: 'src/login/login.js',
+        entry: 'src/login/login.ts',
         // the source template
         template: 'public/Login.html',
         // output as dist/index.html
