@@ -11,6 +11,7 @@
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "strictPropertyInitialization": false,
     "baseUrl": ".",
     "types": [
       "babylonjs",
