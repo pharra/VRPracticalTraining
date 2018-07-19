@@ -1,5 +1,5 @@
 <template>
-  <div id='toolbar' :class="{test:show}">
+  <div id='toolbar' :style="{width:'20%', height: this.height - 56 + 'px'}">
     <h1><span class="label label-default">{{ObjSample.info1}}</span></h1><br>
     <hr>
     <h3>{{ObjSample.info2}}</h3><br>
@@ -10,12 +10,10 @@
 </template>
 
 <script lang='ts'>
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 import { ObjInfo } from './ObjInfo';
 import Axios from 'axios';
 import DebugLog from '@/lib/DebugLog';
-
-
 
 @Component
 export default class Toolbar extends Vue {
@@ -23,14 +21,14 @@ export default class Toolbar extends Vue {
   private name: string = 'Toolbar';
   private ObjSample: ObjInfo = new ObjInfo();
   private show: boolean = true;
+
+  @Prop() private height: number;
 }
 </script>
 
 
 <style scoped>
 #toolbar {
-  width: 20%;
-	height: 94%;
   float: right;
 }
 .test{

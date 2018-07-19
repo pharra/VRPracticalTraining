@@ -1,69 +1,71 @@
 <template>
-  <div id='Navibar'>
+  <div id='Navibar' style="width:100%; height:'56px';">
 			
 				<!-- Header -->
-  <header class="header-area inner-page">
-	<nav class="navigation">
-		<div class="container">
-			<div class="row">
-				<div class="col-sm-12 col-xs-12">
-					<div class="logo pull-left">
-						<a href="/home"><img alt="VR Practical" src="/webStatic/index/images/home1/logo.png" style="height: 45px;"></a> 
-					</div>
-					<ul class="main-menu pull-right">
-						<li><a href="/home">主页</a></li>
-						<li><a href="about-us.html">关于</a></li>
-						<li class="menu-has-child">
-							<a href="#">帮助</a>
-							<ul>
-								<li>
-									<a href="event.html">产品</a>
-									<ul>
-										<li><a href="event-details.html">产品细节</a></li>
-									</ul>
-								</li>
-								<li><a href="routine.html">用户指南</a></li>
-								<li><a href="contact.html">联系我们</a></li>
-							</ul>
-						</li>
-			
-							<li><a href="/login">登陆</a></li>
-							<li><a href="/login">注册</a></li>
-					</ul>
-					<div class="mobile-menu hidden-lg hidden-md hidden-sm">
-						<span></span>
-						<span></span>
-						<span></span>
-						<span></span>
-					</div>
-				</div>
-			</div>
-		</div>
-	</nav>
-</header>
+  <b-navbar toggleable="md" type="dark" variant="info">
+
+  <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+
+  <b-navbar-brand href="#">NavBar</b-navbar-brand>
+
+  <b-collapse is-nav id="nav_collapse">
+
+    <b-navbar-nav>
+      <b-nav-item href="#">Link</b-nav-item>
+      <b-nav-item href="#" disabled>Disabled</b-nav-item>
+    </b-navbar-nav>
+
+    <!-- Right aligned nav items -->
+    <b-navbar-nav class="ml-auto">
+
+      <b-nav-form>
+        <b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Search"/>
+        <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
+      </b-nav-form>
+
+      <b-nav-item-dropdown text="Lang" right>
+        <b-dropdown-item href="#">EN</b-dropdown-item>
+        <b-dropdown-item href="#">ES</b-dropdown-item>
+        <b-dropdown-item href="#">RU</b-dropdown-item>
+        <b-dropdown-item href="#">FA</b-dropdown-item>
+      </b-nav-item-dropdown>
+
+      <b-nav-item-dropdown right>
+        <!-- Using button-content slot -->
+        <template slot="button-content">
+          <em>User</em>
+        </template>
+        <b-dropdown-item href="#">Profile</b-dropdown-item>
+        <b-dropdown-item href="#">Signout</b-dropdown-item>
+      </b-nav-item-dropdown>
+    </b-navbar-nav>
+
+  </b-collapse>
+</b-navbar>
 
  </div>
 
 </template>
 
 <script lang='ts'>
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import BootstrapVue from 'bootstrap-vue';
+Vue.use(BootstrapVue);
+
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 @Component
 export default class Navibar extends Vue {
   private el: string = '#Navibar';
   private name: string = 'Navibar';
-
-  private data() {
-    return {};
-  }
 }
 </script>
 
 
 <style>
 #Navibar {
-  height: 75px;
+  height: 56px;
   touch-action: none;
 }
 </style>
