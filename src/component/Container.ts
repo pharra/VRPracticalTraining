@@ -16,6 +16,12 @@ class Container {
     private toolButtons: BABYLON.GUI.Button[] = [];
     private skyBox: BABYLON.Mesh | null = null;
     private skyboxMaterial: BABYLON.StandardMaterial | null = null;
+    private box1: BABYLON.Mesh | null = null;
+    private box2: BABYLON.Mesh | null = null;
+    private box3: BABYLON.Mesh | null = null;
+    private box4: BABYLON.Mesh | null = null;
+    private box5: BABYLON.Mesh | null = null;
+    private box6: BABYLON.Mesh | null = null;
     /**
      * create the container using the url of selected project
      * @param canvasElement canvas id
@@ -35,7 +41,25 @@ class Container {
         this.skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
         this.skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
         this.skyBox.material = this.skyboxMaterial;
-
+        // 防止相机进入天空盒外的6个辅助盒子
+        this.box1 = BABYLON.Mesh.CreateBox('box1', 200, this.scene);
+        this.box2 = BABYLON.Mesh.CreateBox('box1', 200, this.scene);
+        this.box3 = BABYLON.Mesh.CreateBox('box1', 200, this.scene);
+        this.box4 = BABYLON.Mesh.CreateBox('box1', 200, this.scene);
+        this.box5 = BABYLON.Mesh.CreateBox('box1', 200, this.scene);
+        this.box6 = BABYLON.Mesh.CreateBox('box1', 200, this.scene);
+        this.box1.position = new BABYLON.Vector3(0, 100, -201);
+        this.box2.position = new BABYLON.Vector3(201, 100, 0);
+        this.box3.position = new BABYLON.Vector3(0, 100, 201);
+        this.box4.position = new BABYLON.Vector3(-201, 100, 0);
+        this.box5.position = new BABYLON.Vector3(0, 301, 0);
+        this.box6.position = new BABYLON.Vector3(0, -101, 0);
+        this.box1.checkCollisions = true;
+        this.box2.checkCollisions = true;
+        this.box3.checkCollisions = true;
+        this.box4.checkCollisions = true;
+        this.box5.checkCollisions = true;
+        this.box6.checkCollisions = true;
         this.loadToolButtons();
 
         this.preload();
@@ -97,6 +121,7 @@ class Container {
                 DebugLog('load sucess:' + this.url + meshConfig.fileSrc + ':' + meshConfig.fileName);
                 task.loadedMeshes.forEach((mesh) => {
                     // mesh.position = BABYLON.Vector3.Zero();
+                    mesh.checkCollisions = true;
                     mesh.actionManager = new BABYLON.ActionManager(this.scene);
                     mesh.actionManager.registerAction(
                         new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickTrigger, this.switchToSecondScene));
@@ -117,9 +142,19 @@ class Container {
 
 
     private createScene(): void {
+        this.scene.gravity = new BABYLON.Vector3(0, -0.9, 0);
+        this.scene.collisionsEnabled = true;
         this.freeCamera = new BABYLON.FreeCamera('FreeCamera', new BABYLON.Vector3(0, 40, 0), this.scene);
         this.freeCamera.attachControl(this.canvas, true);
-        this.freeCamera.minZ = 1.0;
+        this.freeCamera.ellipsoid = new BABYLON.Vector3(1, 1, 1);
+        this.freeCamera.checkCollisions = true;
+        // this.freeCamera.applyGravity = true;
+        // Let's remove default keyboard:
+        // this.freeCamera.inputs.removeByType('FreeCameraKeyboardMoveInput');
+    // Create our own manager:
+    // Connect to camera:
+        // this.freeCamera.inputs.add(this.FreeCameraKeyboardRotateInput());
+
         // Create a basic light, aiming 0,1,0 - meaning, to the sky.
         this.light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.scene);
         // this.scene.debugLayer.show();
@@ -195,8 +230,7 @@ class Container {
         this.renderScene(this.scene);
         this.showMainScene = true;
     }
+
 }
-
-
 
 export { Container };
