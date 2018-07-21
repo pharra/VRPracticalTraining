@@ -6,9 +6,44 @@ import json
 from .shortcut import JsonResponse, render
 import hashlib
 from VRPracticalTraining.settings import DEBUG
+
+# Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 # post方法加上前缀post_
 
 DEFAULT_PIC = 'images/avatar/default.jpg'
+
+
+
+
+def post_experimentSearch(request):
+    projects = models.Experiment.objects.all()
+    projects_count = projects.count()
+    paginator = Paginator(projects, 1)
+
+    if projects_count / 9 > int(projects_count / 9) :
+        maxPage = int(projects_count / 9) + 1
+    else:
+        maxPage = int(projects_count / 9)
+    page = request.POST.get('page')
+    if page:
+        project_list = paginator.page(page).object_list
+    else:
+        project_list = paginator.page(1).object_list
+        page = 0
+
+    project_set = []
+    for project in project_list:
+        project_set.append(project)
+    # try:
+    #     customer = paginator.page(page)
+    # except PageNotAnInteger:
+    #     customer = paginator.page(1)
+    # except EmptyPage:
+    #     customer = paginator.page(paginator.num_pages)
+
+    return JsonResponse({'project': project_set, 'maxPage': maxPage, 'currentPage': page + 1})
 
 
 def post_login(request):
@@ -25,7 +60,7 @@ def post_login(request):
             return JsonResponse({'error': '用户不存在'})
         pswObj = models.User.objects.get(email=u_name)
         # if pswObj.hasconfirm is False:
-            # return JsonResponse({'error': '请到邮箱验证您的账号'})
+        # return JsonResponse({'error': '请到邮箱验证您的账号'})
     else:
         user = models.User.objects.filter(phone=u_name).count()
         if user == 0:
@@ -38,7 +73,7 @@ def post_login(request):
         # 返回cookie，在浏览器关闭前维持登录状态
         response = JsonResponse({'error': ''})
 
-        u_id = bytes.decode(bytes(str(pswObj.userid),"UTF-8"))
+        u_id = bytes.decode(bytes(str(pswObj.userid), "UTF-8"))
         value = u_id + "_" + encryption(u_id + psw)
         response.set_cookie(key="vrpt", value=value, httponly=True)
         return response
@@ -76,7 +111,7 @@ def post_signUp(request):
         # sendConfirmMail(username, nickname, uid)
 
         user = models.User(nickname=nickname, password=password, email=username,
-                            usertype='student')
+                           usertype='student')
 
         # 创建列表
         user.save()
@@ -94,8 +129,8 @@ def post_signUp(request):
         pass
         # 将手机号作为用户名存入数据库中
         uid = randomID()
-        user = models.User(nickname=nickname, password=password,phone=username,
-                            usertype='student')
+        user = models.User(nickname=nickname, password=password, phone=username,
+                           usertype='student')
         user.save()
         # 创建列表
 
@@ -108,4 +143,3 @@ def encryption(md5):
     m = hashlib.md5()
     m.update(md5.join(key).encode("UTF-8"))
     return m.hexdigest()
-    
