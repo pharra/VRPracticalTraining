@@ -48,7 +48,7 @@ class SimpleMiddleware(object):
             response = self.get_response(request)
             if isinstance(response, dict):
                 response = JsonResponse(response)
-            elif request.uid is not None and response.type == "JsonResponse":
+            # elif request.uid is not None and response.type == "JsonResponse":
                 # print(response.content)
                 # content = json.loads(bytes.decode(response.content))
                 # userinfo = views.post_userInfo(request.uid)
@@ -58,11 +58,11 @@ class SimpleMiddleware(object):
                 # for key in message:
                 #     content[key] = message[key]
                 # response.content = json.dumps(content)
-            elif request.uid is not None and response.type == "render":
+            # elif request.uid is not None and response.type == "render":
                 # response.addContent(views.post_userInfo(request.uid))
                 # response.addContent(views.post_getMessage(request))
 
-        # Code to be executed for each request/response after
-        # the view is called.
+                # Code to be executed for each request/response after
+                # the view is called.
         response.charset = 'UTF-8'
         return response

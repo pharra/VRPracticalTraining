@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^api/post_signup$', views.post_signUp, name='post_signUp'),
     url(r'^api/post_logout$', views.post_logout, name='logout'),
     url(r'^api/post_experimentSearch$', views.post_experimentSearch, name='post_experimentSearch'),
+    url(r'^api/post_userInfo$', views.post_userInfo, name='post_userInfo'),
 ]

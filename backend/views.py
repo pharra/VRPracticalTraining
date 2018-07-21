@@ -15,18 +15,18 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 DEFAULT_PIC = 'images/avatar/default.jpg'
 
 
-
-
 def post_experimentSearch(request):
     projects = models.Experiment.objects.all()
     projects_count = projects.count()
-    paginator = Paginator(projects, 1)
+    paginator = Paginator(projects, 9)
 
-    if projects_count / 9 > int(projects_count / 9) :
-        maxPage = int(projects_count / 9) + 1
+    if projects_count / 9 > int(projects_count / 9):
+        maxPage = projects_count // 9 + 1
     else:
-        maxPage = int(projects_count / 9)
-    page = request.POST.get('page')
+        maxPage = projects_count // 9
+    print(maxPage)
+    page = int(request.POST.get('page'))
+    print(page)
     if page:
         project_list = paginator.page(page).object_list
     else:
@@ -34,7 +34,9 @@ def post_experimentSearch(request):
         page = 0
 
     project_set = []
-    for project in project_list:
+    for project_raw in project_list:
+        project = {'experimentid': project_raw.experimentid,
+                   'experimentname': project_raw.experimentname, 'experimenturl': project_raw.experimenturl}
         project_set.append(project)
     # try:
     #     customer = paginator.page(page)
@@ -43,7 +45,7 @@ def post_experimentSearch(request):
     # except EmptyPage:
     #     customer = paginator.page(paginator.num_pages)
 
-    return JsonResponse({'project': project_set, 'maxPage': maxPage, 'currentPage': page + 1})
+    return JsonResponse({'project': project_set, 'maxPage': maxPage, 'currentPage': page})
 
 
 def post_login(request):
@@ -143,3 +145,47 @@ def encryption(md5):
     m = hashlib.md5()
     m.update(md5.join(key).encode("UTF-8"))
     return m.hexdigest()
+
+# 根据request的COOKIES判断登录uid
+
+
+def get_uid(request):
+    cookie_content = request.COOKIES.get('uhui', False)
+    if cookie_content:
+        content = cookie_content.split('_')
+    else:
+        return None
+    uid = content[0]
+    psw = content[1]
+    if not models.User.objects.filter(id=uid).exists():
+        return None
+    pswObj = models.User.objects.get(id=uid)
+    password = bytes.decode(pswObj.password.encode("UTF-8"))
+    encrypPsw = encryption(uid + password)
+    if psw == encrypPsw:
+        return uid
+    else:
+        return False
+
+
+def post_userInfo(request):
+    uid = request.uid
+    if uid == None:
+        return JsonResponse({'login': 0})
+    user = models.User.objects.get(id=u_id)
+
+    nickname = user.nickname
+    avatar = '/static/' + str(user.avatar)
+    phoneNum = user.phonenum
+    if phoneNum is None:
+        phoneNum = '未绑定手机号'
+    else:
+        phoneNum = phoneNum[0:3] + '****' + phoneNum[7:]
+    email = user.email
+    if email is None:
+        email = '未绑定邮箱'
+
+    # {'userid': u_id, 'nickname': nickname, 'gender': gender, 'lists': couponList}
+    content = {'userid': u_id, 'nickname': nickname,
+               'avatar': avatar, 'phoneNum': phoneNum, 'email': email}
+    return JsonResponse({'content': content, 'login': 1})
