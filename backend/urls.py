@@ -13,7 +13,7 @@ urlpatterns = [
     url(r'^home$', TemplateView.as_view(template_name='home.html')),
 
 
-    url(r'^post_login$', views.post_login, name='post_login'),
-    url(r'^post_signup$', views.post_signUp, name='post_signUp'),
-    url(r'^post_logout$', views.post_logout, name='logout'),
+    url(r'^api/post_login$', views.post_login, name='post_login'),
+    url(r'^api/post_signup$', views.post_signUp, name='post_signUp'),
+    url(r'^api/post_logout$', views.post_logout, name='logout'),
 ]

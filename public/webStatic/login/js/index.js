@@ -191,7 +191,7 @@ $(window).resize(function () {
 function login_handler() {
 
     $.ajax({
-        url: '/post_login',
+        url: '/api/post_login',
         type: 'POST',
         dataType: 'json',
         data: {"username": $("#login-username").val(), "password": $.md5($("#login-password").val() + "UHui")},
@@ -223,7 +223,7 @@ function login_handler() {
 function sign_up() {
 
     $.ajax({
-        url: '/post_signup',
+        url: '/api/post_signup',
         type: 'POST',
         dataType: 'json',
         data: {
@@ -253,7 +253,7 @@ function sign_up() {
 
 
             $.ajax({
-                url: '/post_login',
+                url: '/api/post_login',
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -381,7 +381,7 @@ function func_edit_userinfo_submit() {
         content.newphone_verification_code = $("#newphone_verification_code").val();
     }
     $.ajax({
-        url: '/post_modifyUserInfo',
+        url: '/api/post_modifyUserInfo',
         type: 'POST',
         dataType: 'json',
         data: content,
@@ -393,7 +393,7 @@ function func_edit_userinfo_submit() {
 function get_email_verificationcode() {
     var email = $("#newemail").val();
     $.ajax({
-        url: '/post_sendEmailVerifyCode',
+        url: '/api/post_sendEmailVerifyCode',
         type: 'POST',
         dataType: 'json',
         data: {"email": email},
@@ -406,7 +406,7 @@ function get_email_verificationcode() {
 function get_phone_verificationcode() {
     var phonenum = $("#newtelno").val();
     $.ajax({
-        url: '/post_sendMobileVerifyCode',
+        url: '/api/post_sendMobileVerifyCode',
         type: 'POST',
         dataType: 'json',
         data: {"phonenum": phonenum},

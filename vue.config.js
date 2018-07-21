@@ -7,14 +7,9 @@ module.exports = {
           ws: true,
           changeOrigin: true
         },
-        '/post_login': {
+        '/api': {
           target: 'http://127.0.0.1:8000/',
           ws: true,
-          changeOrigin: true
-        },
-        '/post_signup': {
-          target: 'http://127.0.0.1:8000/',
-          ws: true, 
           changeOrigin: true
         }
       }
