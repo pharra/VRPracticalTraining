@@ -24,7 +24,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-sm-12 col-xs-12">
-                        <div class="logo pull-left">
+                        <div class="logo pull-left" :class="{newlogo:showClass}">
                             <a href="/">
                                 <img alt="VR Practical" src="/webStatic/index/images/home1/logo.png" style="height: 45px;">
                             </a>
@@ -100,6 +100,9 @@ import GetData from './GetData';
 export default class Navibar extends Vue {
   private name: string = 'Navibar';
   private data: any = null;
+  private height: number = 0;
+
+  @Prop() private showClass: boolean = false;
 
   private postUserInfo() {
     this.data = GetData.postUserInfo();
@@ -112,4 +115,7 @@ export default class Navibar extends Vue {
 </script>
 
 <style scoped>
+.newlogo a:after {
+  background: rgba(0, 0, 0, 0) !important ;
+}
 </style>

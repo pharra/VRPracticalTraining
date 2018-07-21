@@ -1,5 +1,5 @@
 <template>
-<div  :style="{width:'80%', height: height - 56 + 'px'}" class="canvas">
+<div  :style="{width:'80%', height: height - navHeight + 'px'}" class="canvas">
   <canvas id="renderCanvas"></canvas>
 </div>
 </template>
@@ -14,6 +14,11 @@ export default class ContainerCanvas extends Vue {
   private name: string = 'ContainerCanvas';
 
   @Prop() private height: number;
+  @Prop() private navHeight: number;
+
+  // private created() {
+  //   sessionStorage.setItem("name", res.data.name);
+  // }
 }
 </script>
 

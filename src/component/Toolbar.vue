@@ -1,5 +1,5 @@
 <template>
-  <div id='toolbar' :style="{width:'20%', height: this.height - 56 + 'px'}">
+  <div id='toolbar' :style="{width:'20%', height: height - navHeight + 'px'}">
     <h1><span class="label label-default">{{ObjSample.info1}}</span></h1><br>
     <hr>
     <h3>{{ObjSample.info2}}</h3><br>
@@ -23,6 +23,7 @@ export default class Toolbar extends Vue {
   private show: boolean = true;
 
   @Prop() private height: number;
+  @Prop() private navHeight: number;
 }
 </script>
 
@@ -30,8 +31,5 @@ export default class Toolbar extends Vue {
 <style scoped>
 #toolbar {
   float: right;
-}
-.test{
-  background-color: blue;
 }
 </style>
