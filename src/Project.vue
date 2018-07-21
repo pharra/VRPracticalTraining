@@ -24,7 +24,7 @@ import DebugLog from '@/lib/DebugLog';
 export default class Project extends Vue {
   private name = 'Project';
   private height: number = 0;
-  private navHeight: number = 86.2;
+  private navHeight: number = 83;
   private showToolBar: boolean = false;
   private canvasWidth: string = '100%';
   private toolBarWidth: string = '0%';
