@@ -51,7 +51,7 @@ export default class GetData {
         timeout: 5000,
         dataType: 'json',
         success: (data, textStatus, jqXHR) => {
-            jsonData = data;
+            jsonData = data[0];
         },
         error: (xhr, textStatus) => {
             DebugLog(xhr, textStatus);

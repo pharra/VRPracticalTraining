@@ -40,8 +40,8 @@ export default class Project extends Vue {
   @Watch('showToolBar')
   private watchCount(newVal: any, oldVal: any) {
     if (newVal === true) {
-      this.canvasWidth = '80%';
-      this.toolBarWidth = '20%';
+      this.canvasWidth = '70%';
+      this.toolBarWidth = '30%';
     } else {
       this.canvasWidth = '100%';
       this.toolBarWidth = '0%';
