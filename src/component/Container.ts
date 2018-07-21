@@ -14,8 +14,8 @@ class Container {
     private configJson: any | null = null;
     private showMainScene: boolean = true;
     private toolButtons: BABYLON.GUI.Button[] = [];
-
-
+    private skyBox: BABYLON.Mesh | null = null;
+    private skyboxMaterial: BABYLON.StandardMaterial | null = null;
     /**
      * create the container using the url of selected project
      * @param canvasElement canvas id
@@ -26,6 +26,16 @@ class Container {
         this.canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
         this.engine = new BABYLON.Engine(this.canvas, true);
         this.scene = new BABYLON.Scene(this.engine);
+        this.skyBox = BABYLON.Mesh.CreateBox('skyBox', 200.0, this.scene);
+        this.skyBox.position = new BABYLON.Vector3(0, 100, 0);
+        this.skyboxMaterial = new BABYLON.StandardMaterial('skyBox', this.scene);
+        this.skyboxMaterial.backFaceCulling = false;
+        this.skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture('/static/share/textures/skybox', this.scene);
+        this.skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+        this.skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
+        this.skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        this.skyBox.material = this.skyboxMaterial;
+
         this.loadToolButtons();
 
         this.preload();
@@ -55,6 +65,7 @@ class Container {
     private preload() {
         Axios.get(this.url + 'config.json')
             .then((response) => {
+                DebugLog(this.url);
                 DebugLog(response.data);
                 this.configJson = response.data;
                 this.loadScene();
@@ -72,6 +83,10 @@ class Container {
         };
 
         assetsManager.onFinish = (tasks) => {
+            // const mesh = this.scene.getMeshByName('landspace');
+            // if(mesh){
+            //     mesh.scaling=
+            // }
             this.createScene();
             this.renderScene(this.scene);
         };
@@ -102,13 +117,14 @@ class Container {
 
 
     private createScene(): void {
-        this.freeCamera = new BABYLON.FreeCamera('FreeCamera', new BABYLON.Vector3(0, 0, 0), this.scene);
+        this.freeCamera = new BABYLON.FreeCamera('FreeCamera', new BABYLON.Vector3(0, 40, 0), this.scene);
         this.freeCamera.attachControl(this.canvas, true);
-
+        this.freeCamera.minZ = 1.0;
         // Create a basic light, aiming 0,1,0 - meaning, to the sky.
         this.light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.scene);
-
         // this.scene.debugLayer.show();
+        // const texture = new BABYLON.CubeTexture('/textures/SpecularHDR.dds', this.scene);
+        // this.scene.createDefaultSkybox(texture, true, 100);
     }
 
     private createGUI(scene: BABYLON.Scene): BABYLON.GUI.AdvancedDynamicTexture {
