@@ -6,8 +6,8 @@ import 'babylonjs-gui';
 import Share from './Share';
 
 class Container {
+    public engine: BABYLON.Engine;
     private canvas: HTMLCanvasElement;
-    private engine: BABYLON.Engine;
     private scene: BABYLON.Scene;
     private freeCamera: BABYLON.FreeCamera | null = null;
     private light: BABYLON.Light | null = null;
@@ -22,6 +22,7 @@ class Container {
     private box4: BABYLON.Mesh | null = null;
     private box5: BABYLON.Mesh | null = null;
     private box6: BABYLON.Mesh | null = null;
+
     /**
      * create the container using the url of selected project
      * @param canvasElement canvas id
@@ -61,6 +62,10 @@ class Container {
         this.box5.checkCollisions = true;
         this.box6.checkCollisions = true;
         this.loadToolButtons();
+
+        // window.addEventListener('resize', () => {
+        //     this.engine.resize();
+        // });
 
         this.preload();
     }
@@ -175,30 +180,27 @@ class Container {
 
     private renderScene(scene: BABYLON.Scene) {
         setTimeout(() => {
+            DebugLog('settimeout');
             this.engine.stopRenderLoop();
             const advancedTexture = this.createGUI(scene);
             this.engine.runRenderLoop(() => {
                 // advancedTexture.dispose();
                 scene.render();
+                this.engine.resize();
                 // this.scene.debugLayer.show();
-                window.removeEventListener('resize', () => {
-                    this.engine.resize();
-                });
-                window.addEventListener('resize', () => {
-                    this.engine.resize();
-                });
             });
         }, 500);
     }
 
     private switchToSecondScene = (evt: BABYLON.ActionEvent) => {
-        if(!this.showMainScene){
+        if (!this.showMainScene) {
             return;
         }
         const m = evt.meshUnderPointer;
 
         if (m) {
             DebugLog('switchToSecondScene:' + m.name);
+            Share.choseObjectName = m.name;
             BABYLON.SceneLoader.Load(this.url + 'obj/', m.name + '.obj', this.engine, (newScene) => {
                 const ArcRotateCamera = new BABYLON.ArcRotateCamera('ArcRotateCamera', 0, 0, 100,
                     BABYLON.Vector3.Zero(), newScene);
@@ -228,6 +230,7 @@ class Container {
 
     private switchToMainScene = () => {
         this.renderScene(this.scene);
+        Share.choseObjectName = null;
         this.showMainScene = true;
     }
 

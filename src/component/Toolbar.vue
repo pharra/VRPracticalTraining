@@ -1,5 +1,5 @@
 <template>
-  <div id='toolbar' :style="{width:'20%', height: height - navHeight + 'px'}">
+  <div id='toolbar' :style="{width: width, height: height - navHeight + 'px'}">
     <h1><span class="label label-default">{{ObjSample.info1}}</span></h1><br>
     <hr>
     <h3>{{ObjSample.info2}}</h3><br>
@@ -24,6 +24,7 @@ export default class Toolbar extends Vue {
 
   @Prop() private height: number;
   @Prop() private navHeight: number;
+  @Prop() private width: string;
 }
 </script>
 
