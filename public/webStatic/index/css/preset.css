@@ -7,21 +7,14 @@
 */
 
 /* ==========================================================================
-   Include Fonts
-   ========================================================================== */
-@import url(https://fonts.googleapis.com/css?family=Sniglet:400);
-@import url(https://fonts.googleapis.com/css?family=Flavors);
-
-/*font-family: 'Flavors', cursive;*/
-
-/* ==========================================================================
    Normalization
    ========================================================================== */
-body{
-    font-family: 'Sniglet', cursive;
-    font-size: 14px;
-    font-weight:  400;
-    line-height: 1;
+   body {
+    font-family: "Work Sans", Arial, "Microsoft YaHei", "微软雅黑", "华文细黑", serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.7;
+    color: black;
 }
 h1,h2,h3,h4,h5,h6{
     font-weight: 400;
