@@ -1,9 +1,9 @@
 <template>
-<div>
-  <Navibar></Navibar>
-  <ContainerCanvas :height='this.height'></ContainerCanvas>
-  <Toolbar :height='this.height'></Toolbar>
-</div>
+  <div>
+    <Navibar></Navibar>
+    <ContainerCanvas :height='this.height'></ContainerCanvas>
+    <Toolbar :height='this.height'></Toolbar>
+  </div>
 </template>
 
 <script lang='ts'>
@@ -12,11 +12,21 @@ import { Container } from './component/Container';
 import ContainerCanvas from './component/ContainerCanvas.vue';
 import Toolbar from './component/Toolbar.vue';
 import Navibar from './component/Navibar.vue';
+
+const getUrlParam = (name: string): string => {
+    const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
+    const r = window.location.search.substr(1).match(reg);
+    if (r != null) {
+      return unescape(r[2]);
+    }
+    return '';
+  };
+
 window.addEventListener('DOMContentLoaded', () => {
   // Create the game using the 'renderCanvas'.
   const container = new Container(
     'renderCanvas',
-    'static/objectModel/project1/',
+    getUrlParam('url'),
   );
 });
 
