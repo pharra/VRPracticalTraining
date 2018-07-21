@@ -64,11 +64,11 @@
                                     </li>
                                 </ul>
                             </li>
-                            <!-- <li>
+                            <li>
                                 <a href="#" id="search-pop">
                                     <i class="fa fa-search"></i>
                                 </a>
-                            </li> -->
+                            </li>
                         </ul>
                         <!-- <div class="mobile-menu hidden-lg hidden-md hidden-sm">
                             <span></span>

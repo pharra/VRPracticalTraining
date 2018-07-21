@@ -4,6 +4,7 @@ from django.shortcuts import render
 from backend import models
 import json
 from .shortcut import JsonResponse, render
+from django.http import HttpResponseRedirect
 import hashlib
 from VRPracticalTraining.settings import DEBUG
 
@@ -150,16 +151,16 @@ def encryption(md5):
 
 
 def get_uid(request):
-    cookie_content = request.COOKIES.get('uhui', False)
+    cookie_content = request.COOKIES.get('vrpt', False)
     if cookie_content:
         content = cookie_content.split('_')
     else:
         return None
     uid = content[0]
     psw = content[1]
-    if not models.User.objects.filter(id=uid).exists():
+    if not models.User.objects.filter(userid=uid).exists():
         return None
-    pswObj = models.User.objects.get(id=uid)
+    pswObj = models.User.objects.get(userid=uid)
     password = bytes.decode(pswObj.password.encode("UTF-8"))
     encrypPsw = encryption(uid + password)
     if psw == encrypPsw:
@@ -170,13 +171,13 @@ def get_uid(request):
 
 def post_userInfo(request):
     uid = request.uid
-    if uid == None:
+    if uid is None:
         return JsonResponse({'login': 0})
-    user = models.User.objects.get(id=u_id)
+    user = models.User.objects.get(userid=uid)
 
     nickname = user.nickname
-    avatar = '/static/' + str(user.avatar)
-    phoneNum = user.phonenum
+    # avatar = '/static/' + str(user.avatar)
+    phoneNum = user.phone
     if phoneNum is None:
         phoneNum = '未绑定手机号'
     else:
@@ -186,6 +187,6 @@ def post_userInfo(request):
         email = '未绑定邮箱'
 
     # {'userid': u_id, 'nickname': nickname, 'gender': gender, 'lists': couponList}
-    content = {'userid': u_id, 'nickname': nickname,
-               'avatar': avatar, 'phoneNum': phoneNum, 'email': email}
+    content = {'userid': uid, 'nickname': nickname,
+               'phone': phoneNum, 'email': email}
     return JsonResponse({'content': content, 'login': 1})
