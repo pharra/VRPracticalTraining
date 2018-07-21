@@ -3,7 +3,7 @@ import 'babylonjs-loaders';
 import Axios from 'axios';
 import DebugLog from '@/lib/DebugLog';
 import 'babylonjs-gui';
-import Share from './Share';
+import { Share } from '@/component/Share';
 
 class Container {
     public engine: BABYLON.Engine;

@@ -313,7 +313,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import Axios, { AxiosResponse } from 'axios';
 import DebugLog from '@/lib/DebugLog';
-import GetData from './GetData';
+import GetData from '@/component/GetData';
 
 @Component
 export default class Home extends Vue {

@@ -13,7 +13,6 @@ import ContainerCanvas from './component/ContainerCanvas.vue';
 import Toolbar from './component/Toolbar.vue';
 import Navibar from './home/Navibar.vue';
 import DebugLog from '@/lib/DebugLog';
-import Share from '@/component/Share';
 
 @Component({
   components: {

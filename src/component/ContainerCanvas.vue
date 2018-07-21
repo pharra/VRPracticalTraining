@@ -7,18 +7,9 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { Container } from './Container';
-import Share from '@/component/Share';
+import {Share, getUrlParam} from '@/component/Share';
 import DebugLog from '@/lib/DebugLog';
-import { setTimeout } from 'timers';
 
-const getUrlParam = (name: string): string => {
-  const reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)');
-  const r = window.location.search.substr(1).match(reg);
-  if (r != null) {
-    return unescape(r[2]);
-  }
-  return '';
-};
 
 window.addEventListener('DOMContentLoaded', () => {
   // Create the game using the 'renderCanvas'.

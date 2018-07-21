@@ -40,4 +40,23 @@ export default class GetData {
     });
     return jsonData;
   }
+
+  public static getObjInfo(projectUrl: string): any {
+    let jsonData: any = null;
+    $.ajax({
+        url: projectUrl,
+        type: 'GET',
+        async: false,
+        data: {},
+        timeout: 5000,
+        dataType: 'json',
+        success: (data, textStatus, jqXHR) => {
+            jsonData = data;
+        },
+        error: (xhr, textStatus) => {
+            DebugLog(xhr, textStatus);
+        },
+    });
+    return jsonData;
+  }
 }
