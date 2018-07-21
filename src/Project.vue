@@ -1,8 +1,8 @@
 <template>
-<div style='width:100%;height:100%;'>
+<div>
   <Navibar></Navibar>
-  <ContainerCanvas></ContainerCanvas>
-  <Toolbar></Toolbar>
+  <ContainerCanvas :height='this.height'></ContainerCanvas>
+  <Toolbar :height='this.height'></Toolbar>
 </div>
 </template>
 
@@ -27,7 +27,17 @@ window.addEventListener('DOMContentLoaded', () => {
     Navibar,
   },
 })
-export default class App extends Vue {}
+export default class Project extends Vue {
+  private name = 'Project';
+  private height: number = 0;
+
+  private mounted() {
+    this.height = document.body.clientHeight;
+    window.addEventListener('resize', (event) => {
+      this.height = document.body.clientHeight;
+    });
+  }
+}
 </script>
 
 <style>

@@ -82,7 +82,7 @@ def post_signUp(request):
         user.save()
         # createLists(user)
 
-        return JsonResponse({'errno': '2', 'message': '请检查验证邮件'})
+        return JsonResponse({'errno': '0', 'message': '注册成功!'})
 
     else:
         if models.User.objects.filter(phone=username).exists():
